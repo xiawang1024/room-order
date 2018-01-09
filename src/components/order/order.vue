@@ -1,12 +1,17 @@
 <template>
     <div class="order">
+        <div class="g-mark" v-show="isShowDate"></div>
         <div class="g-hd">
             <div class="room-info">
                 <p class="room-num">房间号：1</p>
                 <p class="title">
                     已选择预约时间段：
-                    <span class="time-range">
+                    <span class="time-range" @click="openDate">
                         {{timeRange}}
+                        <div class="date-options" v-show="isShowDate">
+                            <span class="arrow"></span>
+                            <div class="date" v-for="(item,index) of dateList" @click.stop="tabSwitch(item,index)">{{item}}</div>
+                        </div>
                     </span>
                 </p>
             </div>
@@ -42,6 +47,7 @@ export default {
     data (){
         return {
             tabIndex:0,
+            isShowDate:false,
             dateList:[],
             timeList:[],            
             selectNum:0,
@@ -79,6 +85,10 @@ export default {
             let suffix = ' 00:00'
             let date = item + suffix
             this._initTimeArr(date,index)
+            this.isShowDate = false
+        },
+        openDate () {            
+            this.isShowDate = true
         },
         _initDateArr() {
             this.dateList = this._getDay(3)
@@ -136,23 +146,23 @@ export default {
                 return val.substring(1)
             }else{
                 return val
-            }
-            
+            }            
         },        
         selectYes() {                 
             if(this.selectStartIndex == 1000) {
-                alert('请选择开始时间')
+                this.$toasted.show('请选择开始时间！',{type:'error'})
                 return
             }
             if(this.selectEndIndex == -1) {
-                alert('请选择结束时间')
+                this.$toasted.show('请选择结束时间！',{type:'error'})
                 return
             }
             this._postTimeRange()
             setTimeout(() => {
-                this._clearSelect()
+                this._clearSelect()                
                 LIST[0].push({star:'12:15',end:'12:30'})
                 this._initTimeArr()
+                this.$toasted.show('预约成功！',{type:'success'})
             },3000)
             
         },
@@ -165,7 +175,7 @@ export default {
         },
         selectTime(item,index) {                    
             if(item.disable) {
-                alert('此时间段不可预约')
+                this.$toasted.show('此时间段不可预约！',{type:'error'})                
                 return
             }
             this.selectNum ++
@@ -175,7 +185,7 @@ export default {
                 this.selectEndIndex = -1                                
             }else if (this.selectNum == 2) {            
                 if(this.selectStartIndex == index ) {
-                    alert('开始时间和结束时间不能相同！')
+                    this.$toasted.show('开始时间和结束时间不能相同！',{type:'error'})                    
                     this._clearSelect()
                     this._removeClass(index)                    
                     return  
@@ -196,7 +206,7 @@ export default {
             for(let i =start;i<end;i++) {
                 let item = this.timeList[i]
                 if(item.disable) {
-                    alert('此时间段交叉，请重新选择')
+                    this.$toasted.show('此时间段交叉，请重新选择！',{type:'error'})                     
                     this._clearSelect()
                     this._removeClass(start)
                     this._removeClass(end)
@@ -243,6 +253,13 @@ export default {
     height 100%
     padding 40px
     box-sizing border-box
+    .g-mark        
+        position fixed
+        top 0
+        right 0
+        bottom 0
+        left 0
+        background rgba(0,0,0,0.6)
     .g-hd
         display flex
         height 80px
@@ -252,8 +269,34 @@ export default {
             .room-num,.title
                 line-height 40px
                 .time-range
+                    position relative
                     font-weight 700
                     color #0081dc
+                    cursor pointer
+                    .date-options                        
+                        position absolute
+                        z-index 1024
+                        top 46px
+                        left -30px
+                        width 140px
+                        text-align center
+                        height 130px
+                        background #ffffff
+                        border-radius 6px
+                        cursor pointer
+                        .arrow
+                            position absolute
+                            top -38px
+                            left 50px
+                            display block                                                        
+                            border 20px solid rgba(0,0,0,0)
+                            border-bottom-color #ffffff
+                        .date
+                            height 43px
+                            border-bottom 1px solid #999999
+                            box-sizing border-box
+                            &:last-child
+                                border none
         .btn-wrap
             display flex
             align-items center

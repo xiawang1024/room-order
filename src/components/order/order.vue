@@ -157,13 +157,14 @@ export default {
                 this.$toasted.show('请选择结束时间！',{type:'error'})
                 return
             }
+            this.$toasted.show('数据玩命提交中，请耐心等待！',{type:'info'})
             this._postTimeRange()
             setTimeout(() => {
                 this._clearSelect()                
                 LIST[0].push({star:'12:15',end:'12:30'})
                 this._initTimeArr()
                 this.$toasted.show('预约成功！',{type:'success'})
-            },3000)
+            },3500)
             
         },
         selectNo () {           
@@ -301,11 +302,22 @@ export default {
             display flex
             align-items center
             justify-content space-around
-            .order-btn,.clear-btn                
+            .order-btn,.clear-btn    
+                background #ffffff             
                 width 140px
                 height 50px
                 cursor pointer
+                border-radius 6px 
+                font-size 16px
+                outline none               
+                &:active
+                    background rgba(0,0,0,.2)
+            .order-btn
+                border 1px solid #4caf50
+                color #4caf50
             .clear-btn
+                border 1px solid #f44336
+                color #f44336
                 margin-left 10px
     .time-wrap
         flex 1

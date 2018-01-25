@@ -38,8 +38,8 @@
 <script>
 const HOUR = 24
 const LIST = [
-            [{star:'18:15',end:'18:30'},{star:'20:45',end:'21:00'},{star:'19:15',end:'19:30'}],
-            [{star:'18:15',end:'18:30'},{star:'19:15',end:'19:30'}],
+            [{star:'09:00',end:'11:00'},{star:'18:15',end:'18:30'},{star:'20:45',end:'21:00'},{star:'19:15',end:'19:30'}],
+            [{star:'08:00',end:'11:00'},{star:'19:15',end:'19:30'}],
             [{star:'03:15',end:'03:30'},{star:'20:45',end:'21:00'},{star:'20:00',end:'20:15'}]
         ]
 export default {
@@ -107,7 +107,8 @@ export default {
                 len ++
             }
             let arr = []
-            for(let hour = len; hour < HOUR; hour++){                
+            
+            for(let hour = 0; hour < HOUR; hour++){                
                 let minute = '00'
                 for(let j = 0; j<4; j++){       
                     let disable = false       
@@ -125,28 +126,54 @@ export default {
                     }
                     minute += 15
                 }
-            }                   
-            this._disableArr(LIST[index],arr)        
+            }    
+            // for(let hour = len; hour < HOUR; hour++){                
+            //     let minute = '00'
+            //     for(let j = 0; j<4; j++){       
+            //         let disable = false       
+            //         if(hour == nowHour) {
+            //             if(Number(minute) < nowMinute ) {
+            //                 disable = true
+            //             }
+            //         }
+            //         arr.push({
+            //             time:`${hour}:${minute}`,
+            //             disable:disable
+            //         })
+            //         if(minute == '00'){
+            //             minute = 0
+            //         }
+            //         minute += 15
+            //     }
+            // }               
+            // console.log(len)    
+            if(index == 0) {
+                arr = arr.slice(len*4)
+            }
+            this._disableArr(LIST[index],arr)    
             this.timeList = arr
         },
         _disableArr (arrList,arr) {
             let len = arrList.length;
             for(let i =0 ;i<len; i++) {
                 let item = arrList[i]
+                console.log('------------------------------------');
+                console.log(item);
+                console.log('------------------------------------');
                 arr.forEach((val,index,arr) => {
-                    if(val.time >= this._deletZero(item.star) && val.time <= this._deletZero(item.end)){
+                    
+                    if(this._deletZero(val.time) >= this._deletZero(item.star) && this._deletZero(val.time) <= this._deletZero(item.end)){
                         arr[index].disable = true
+                        
                     }
+                    
                 })
             }
             return arr
         },
         _deletZero (val) {
-            if(val.charAt(0) == '0'){
-                return val.substring(1)
-            }else{
-                return val
-            }            
+            let prefix = '2000/01/01 '
+            return new Date(prefix+val).getTime();      
         },        
         selectYes() {                 
             if(this.selectStartIndex == 1000) {

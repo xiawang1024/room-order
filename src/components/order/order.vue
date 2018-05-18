@@ -24,14 +24,14 @@
                 </button>
             </div>
         </div>
-        <div class="time-wrap" >            
-            <span class="time" 
+        <div class="time-wrap" >
+            <span class="time"
                 ref="time"
-                v-for="(item,index) of timeList" 
+                v-for="(item,index) of timeList"
                 :class="[{disable:item.disable,selected:index == selectStartIndex || index >= selectStartIndex && index <= selectEndIndex}]"
                 @click="selectTime(item,index)"
-            >{{item.time}}</span>        
-        </div>               
+            >{{item.time}}</span>
+        </div>
     </div>
 </template>
 
@@ -46,10 +46,11 @@ export default {
     name:'order',
     data (){
         return {
+            surplusTime:240,
             tabIndex:0,
             isShowDate:false,
             dateList:[],
-            timeList:[],            
+            timeList:[],
             selectNum:0,
             selectStartIndex:1000,
             selectEndIndex:-1
@@ -63,31 +64,31 @@ export default {
         timeRange() {
             let time = ''
             if(this.timeList[this.selectStartIndex]) {
-                time = `${this.timeList[this.selectStartIndex].time}-` 
+                time = `${this.timeList[this.selectStartIndex].time}-`
                 if(this.timeList[this.selectEndIndex]) {
                     time = `${this.timeList[this.selectStartIndex].time}-${this.timeList[this.selectEndIndex].time}`
-                }                        
+                }
             }
             return this.dateList[this.tabIndex] + ' ' + time
-        }                
+        }
     },
     watch:{
-        selectNum(newVal,oldVal) {                  
+        selectNum(newVal,oldVal) {
             if(newVal == 2) {
                 this.selectNum = 0
-            } 
+            }
         }
     },
     methods:{
         tabSwitch(item,index) {
             this.tabIndex = index
-            this._clearSelect()                
+            this._clearSelect()
             let suffix = ' 00:00'
             let date = item + suffix
             this._initTimeArr(date,index)
             this.isShowDate = false
         },
-        openDate () {            
+        openDate () {
             this.isShowDate = true
         },
         _initDateArr() {
@@ -97,21 +98,21 @@ export default {
             let nowTime = new Date()
             if(index == 0) {
                 nowTime = new Date()
-            }else { 
+            }else {
                 nowTime = new Date(date)
             }
             let nowHour = nowTime.getHours()
             let nowMinute = nowTime.getMinutes()
-            let len = nowHour            
+            let len = nowHour
             if( nowMinute > 45 ) {
                 len ++
             }
             let arr = []
-            
-            for(let hour = 0; hour < HOUR; hour++){                
+
+            for(let hour = 0; hour < HOUR; hour++){
                 let minute = '00'
-                for(let j = 0; j<4; j++){       
-                    let disable = false       
+                for(let j = 0; j<4; j++){
+                    let disable = false
                     if(hour == nowHour) {
                         if(Number(minute) < nowMinute ) {
                             disable = true
@@ -126,11 +127,11 @@ export default {
                     }
                     minute += 15
                 }
-            }    
-            // for(let hour = len; hour < HOUR; hour++){                
+            }
+            // for(let hour = len; hour < HOUR; hour++){
             //     let minute = '00'
-            //     for(let j = 0; j<4; j++){       
-            //         let disable = false       
+            //     for(let j = 0; j<4; j++){
+            //         let disable = false
             //         if(hour == nowHour) {
             //             if(Number(minute) < nowMinute ) {
             //                 disable = true
@@ -145,12 +146,12 @@ export default {
             //         }
             //         minute += 15
             //     }
-            // }               
-            // console.log(len)    
+            // }
+            // console.log(len)
             if(index == 0) {
                 arr = arr.slice(len*4)
             }
-            this._disableArr(LIST[index],arr)    
+            this._disableArr(LIST[index],arr)
             this.timeList = arr
         },
         _disableArr (arrList,arr) {
@@ -161,21 +162,21 @@ export default {
                 console.log(item);
                 console.log('------------------------------------');
                 arr.forEach((val,index,arr) => {
-                    
+
                     if(this._deletZero(val.time) >= this._deletZero(item.star) && this._deletZero(val.time) <= this._deletZero(item.end)){
                         arr[index].disable = true
-                        
+
                     }
-                    
+
                 })
             }
             return arr
         },
         _deletZero (val) {
             let prefix = '2000/01/01 '
-            return new Date(prefix+val).getTime();      
-        },        
-        selectYes() {                 
+            return new Date(prefix+val).getTime();
+        },
+        selectYes() {
             if(this.selectStartIndex == 1000) {
                 this.$toasted.show('请选择开始时间！',{type:'error'})
                 return
@@ -187,36 +188,36 @@ export default {
             this.$toasted.show('数据玩命提交中，请耐心等待！',{type:'info'})
             this._postTimeRange()
             setTimeout(() => {
-                this._clearSelect()                
+                this._clearSelect()
                 LIST[0].push({star:'12:15',end:'12:30'})
                 this._initTimeArr()
                 this.$toasted.show('预约成功！',{type:'success'})
             },3500)
-            
+
         },
-        selectNo () {           
+        selectNo () {
             this._clearSelect()
         },
         //异步提交数据
         _postTimeRange() {
             console.log(this.timeRange)
         },
-        selectTime(item,index) {                    
+        selectTime(item,index) {
             if(item.disable) {
-                this.$toasted.show('此时间段不可预约！',{type:'error'})                
+                this.$toasted.show('此时间段不可预约！',{type:'error'})
                 return
             }
             this.selectNum ++
             if(this.selectNum == 1) {
-                this.startTime = item.time   
-                this.selectStartIndex = index  
-                this.selectEndIndex = -1                                
-            }else if (this.selectNum == 2) {            
+                this.startTime = item.time
+                this.selectStartIndex = index
+                this.selectEndIndex = -1
+            }else if (this.selectNum == 2) {
                 if(this.selectStartIndex == index ) {
-                    this.$toasted.show('开始时间和结束时间不能相同！',{type:'error'})                    
+                    this.$toasted.show('开始时间和结束时间不能相同！',{type:'error'})
                     this._clearSelect()
-                    this._removeClass(index)                    
-                    return  
+                    this._removeClass(index)
+                    return
                 }
                 this.selectEndIndex = index
                 this.endTime = item.time
@@ -226,21 +227,34 @@ export default {
                     this.selectStartIndex = this.selectEndIndex
                     this.selectEndIndex = c
                 }
-                this._acrossTimeRange(this.selectStartIndex,this.selectEndIndex)                       
-            }                   
+                this._acrossTimeRange(this.selectStartIndex,this.selectEndIndex)
+                this._rangeTimeLimit(this.selectStartIndex,this.selectEndIndex)
+            }
         },
         //判断时间段交叉
         _acrossTimeRange(start,end) {
             for(let i =start;i<end;i++) {
                 let item = this.timeList[i]
                 if(item.disable) {
-                    this.$toasted.show('此时间段交叉，请重新选择！',{type:'error'})                     
+                    this.$toasted.show('此时间段交叉，请重新选择！',{type:'error'})
                     this._clearSelect()
                     this._removeClass(start)
                     this._removeClass(end)
-                    return 
+                    return
                 }
             }
+        },
+        //限制时间段范围选择
+        _rangeTimeLimit(start,end) {
+          let surplusTime = this.surplusTime
+          let surplusIndex = surplusTime / 15
+          if(end - start > surplusIndex) {
+            this.$toasted.show('今日总预约时间已超过上限4个小时！请缩小时间范围再次尝试！',{type:'error'})
+            this._clearSelect()
+            this._removeClass(start)
+            this._removeClass(end)
+            return
+          }
         },
         _removeClass(index) {
             this.$refs.time[index].classList.remove('selected')
@@ -266,121 +280,172 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '~common/stylus/mixin.styl'
-.order
-    @media screen and (min-width:601px)       
-        font-size 20px
-    @media screen and (min-device-width :376px) and (max-device-width:600px)      
-        font-size 36px
-    @media screen and (max-device-width:375px)        
-        font-size 36px
-    display flex
-    flex-direction column
-    position fixed
-    width 1080px
-    height 100%
-    padding 40px
-    box-sizing border-box
-    .g-mark        
-        position fixed
-        top 0
-        right 0
-        bottom 0
-        left 0
-        background rgba(0,0,0,0.6)
-    .g-hd
-        display flex
-        height 80px
-        .room-info
-            width 100%
-            box-sizing border-box
-            .room-num,.title
-                line-height 40px
-                .time-range
-                    position relative
-                    font-weight 700
-                    color #0081dc
-                    cursor pointer
-                    .date-options                        
-                        position absolute
-                        z-index 1024
-                        top 46px
-                        left -30px
-                        width 140px
-                        text-align center
-                        height 130px
-                        background #ffffff
-                        border-radius 6px
-                        cursor pointer
-                        .arrow
-                            position absolute
-                            top -38px
-                            left 50px
-                            display block                                                        
-                            border 20px solid rgba(0,0,0,0)
-                            border-bottom-color #ffffff
-                        .date
-                            height 43px
-                            border-bottom 1px solid #999999
-                            box-sizing border-box
-                            &:last-child
-                                border none
-        .btn-wrap
-            display flex
-            align-items center
-            justify-content space-around
-            .order-btn,.clear-btn    
-                background #ffffff             
-                width 140px
-                height 50px
-                cursor pointer
-                border-radius 6px 
-                font-size 16px
-                outline none               
-                &:active
-                    background rgba(0,0,0,.2)
-            .order-btn
-                border 1px solid #4caf50
-                color #4caf50
-            .clear-btn
-                border 1px solid #f44336
-                color #f44336
-                margin-left 10px
-    .time-wrap
-        flex 1
-        margin-top 20px
-        display flex
-        flex-wrap wrap
-        align-items center
-        overflow auto
-        &::-webkit-scrollbar-track-piece
-            width 6px
-            background-color:#4e4e5a  
-        &::-webkit-scrollbar
-            width:4px
-            height:6px 
-        &::-webkit-scrollbar-thumb
-            height:10px
-            background:#0081dc   
-            cursor:pointer
-        &::-webkit-scrollbar-thumb:hover
-            background:#0081dc
-            cursor:pointer
-        .time
-            display flex 
-            align-items center
-            justify-content center
-            flex 0 0 2.26rem
-            width 250px
-            height 100px
-            text-align center
-            border 1px solid #999999
-            box-sizing border-box
-            cursor pointer
-            &.disable
-                background #ababab
-            &.selected
-                background: #0081dc
-                color #ffffff
-    
+@import '~common/stylus/mixin.styl';
+
+.order {
+  @media screen and (min-width: 601px) {
+    font-size: 20px;
+  }
+
+  @media screen and (min-device-width: 376px) and (max-device-width: 600px) {
+    font-size: 36px;
+  }
+
+  @media screen and (max-device-width: 375px) {
+    font-size: 36px;
+  }
+
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: 1080px;
+  height: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+
+  .g-mark {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .g-hd {
+    display: flex;
+    height: 80px;
+
+    .room-info {
+      width: 100%;
+      box-sizing: border-box;
+
+      .room-num, .title {
+        line-height: 40px;
+
+        .time-range {
+          position: relative;
+          font-weight: 700;
+          color: #0081dc;
+          cursor: pointer;
+
+          .date-options {
+            position: absolute;
+            z-index: 1024;
+            top: 46px;
+            left: -30px;
+            width: 140px;
+            text-align: center;
+            height: 130px;
+            background: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+
+            .arrow {
+              position: absolute;
+              top: -38px;
+              left: 50px;
+              display: block;
+              border: 20px solid rgba(0, 0, 0, 0);
+              border-bottom-color: #ffffff;
+            }
+
+            .date {
+              height: 43px;
+              border-bottom: 1px solid #999999;
+              box-sizing: border-box;
+
+              &:last-child {
+                border: none;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .btn-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      .order-btn, .clear-btn {
+        background: #ffffff;
+        width: 140px;
+        height: 50px;
+        cursor: pointer;
+        border-radius: 6px;
+        font-size: 16px;
+        outline: none;
+
+        &:active {
+          background: rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      .order-btn {
+        border: 1px solid #4caf50;
+        color: #4caf50;
+      }
+
+      .clear-btn {
+        border: 1px solid #f44336;
+        color: #f44336;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .time-wrap {
+    flex: 1;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    overflow: auto;
+
+    &::-webkit-scrollbar-track-piece {
+      width: 6px;
+      background-color: #4e4e5a;
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      height: 10px;
+      background: #0081dc;
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #0081dc;
+      cursor: pointer;
+    }
+
+    .time {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 2.26rem;
+      width: 250px;
+      height: 100px;
+      text-align: center;
+      border: 1px solid #999999;
+      box-sizing: border-box;
+      cursor: pointer;
+
+      &.disable {
+        background: #ababab;
+      }
+
+      &.selected {
+        background: #0081dc;
+        color: #ffffff;
+      }
+    }
+  }
+}
 </style>

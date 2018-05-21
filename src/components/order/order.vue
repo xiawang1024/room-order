@@ -434,6 +434,7 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar-track-piece {
       width: 6px;

@@ -12,21 +12,35 @@
 
 <script>
 export default {
-    name:'name',
-    data() {
-        return {
+  name:'name',
+  data() {
+      return {
 
-        }
-    },
-    created() {
+      }
+  },
+  created() {
 
+  },
+  methods:{
+    goToOrder(n) {
+      console.log(window.localStorage.isLogin)
+      if(this._isLogin()) {
+        eventBus.$emit('order',n)
+        this.$router.push({path:'/order'})
+      }else {
+        this.$toasted.show('请先进行刷卡登陆，谢谢！',{type:'error'})
+        this.$router.push({path:'/login'})
+      }
     },
-    methods:{
-        goToOrder(n) {
-          eventBus.$emit('order',n)
-          this.$router.push({path:'/order'})
-        }
+    _isLogin() {
+      let isLogin = window.localStorage.isLogin
+      if(isLogin == 1) {
+        return true
+      }else {
+        return false
+      }
     }
+  }
 }
 </script>
 
@@ -56,6 +70,7 @@ export default {
   padding: 0 40px;
   box-sizing: border-box;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 
   .title {
     display: block;

@@ -1,18 +1,37 @@
 <template>
   <div id="app">
-    <router-view/>
+    <div class="left">
+      <room></room>
+    </div>
+    <div class="right">
+      <router-view/>
+    </div>
   </div>
 </template>
 
 <script>
+import room from './components/room/room'
 export default {
-  name: 'app'
+  name: 'app',
+  components:{
+    room
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
-@import '~common/stylus/mixin.styl'
-#app
-  width 1080px
-  margin 0 auto
+@import '~common/stylus/mixin.styl';
+
+#app {
+  display: flex;
+}
+
+.left {
+  flex: 1;
+  width: 1080px;
+}
+
+.right {
+  flex: 1;
+}
 </style>

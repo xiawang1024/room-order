@@ -3,7 +3,7 @@
         <div class="g-mark" v-show="isShowDate"></div>
         <div class="g-hd">
             <div class="room-info">
-                <p class="room-num">房间号：1</p>
+                <p class="room-num">房间号：{{roomId}}</p>
                 <p class="title">
                     已选择预约时间段：
                     <span class="time-range" @click="openDate">
@@ -46,6 +46,7 @@ export default {
     name:'order',
     data (){
         return {
+          roomId:1,
             surplusTime:240,
             tabIndex:0,
             isShowDate:false,
@@ -57,9 +58,14 @@ export default {
         }
     },
     created() {
+        eventBus.$on('order',(msg) => {
+          console.log(msg)
+          this.roomId = msg
+        })
         this._initTimeArr()
         this._initDateArr()
     },
+
     computed :{
         timeRange() {
             let time = ''
@@ -190,7 +196,7 @@ export default {
             setTimeout(() => {
                 this._clearSelect()
                 LIST[0].push({star:'12:15',end:'12:30'})
-                this._initTimeArr()
+                this._initTimeArr('',this.tabIndex)
                 this.$toasted.show('预约成功！',{type:'success'})
             },3500)
 

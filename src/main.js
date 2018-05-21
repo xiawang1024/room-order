@@ -1,31 +1,32 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from "vue";
-import App from "./App";
-import router from "./router";
-import Toasted from "vue-toasted";
+import Vue from 'vue';
+import App from './App';
+import router from './router';
+import Toasted from 'vue-toasted';
 
-import isPc from "common/js/isPc";
-import "common/stylus/index.styl";
-if (isPc() == "phone") {
-  require.ensure([], () => {
-    require("common/js/flexible");
-  });
+import isPc from 'common/js/isPc';
+import 'common/stylus/index.styl';
+if (isPc() == 'phone') {
+	require.ensure([], () => {
+		require('common/js/flexible');
+	});
 } else {
-  document.querySelector("html").style.fontSize = "108px";
+	document.querySelector('html').style.fontSize = '108px';
 }
 
 Vue.use(Toasted, {
-  position: "top-left",
-  duration: 3000
+	position: 'top-left',
+	duration: 3000
 });
+window.eventBus = new Vue();
 
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
 new Vue({
-  el: "#app",
-  router,
-  template: "<App/>",
-  components: { App }
+	el: '#app',
+	router,
+	template: '<App/>',
+	components: { App }
 });

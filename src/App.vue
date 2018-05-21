@@ -15,6 +15,26 @@ export default {
   name: 'app',
   components:{
     room
+  },
+  mounted() {
+    const maxTime = 5  //5s 退出
+    let time = maxTime
+    document.body.addEventListener('click',() => {
+      time = maxTime
+      console.log('touch')
+    },false)
+    let intervalId = setInterval(() => {
+      time--;
+      if(time<=0) {
+        this.loginOut()
+        clearInterval(intervalId)
+      }
+    },1000)
+  },
+  methods:{
+    loginOut() {
+      console.log('退出')
+    }
   }
 }
 </script>

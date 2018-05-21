@@ -6,14 +6,20 @@
                 <p class="room-num">房间号：{{roomId}}</p>
                 <p class="title">
                     已选择预约时间段：
-                    <span class="time-range" @click="openDate">
+                    <span class="time-range">
+                        {{timeRange}}
+                    </span>
+                    <!-- <span class="time-range" @click="openDate">
                         {{timeRange}}
                         <div class="date-options" v-show="isShowDate">
                             <span class="arrow"></span>
                             <div class="date" v-for="(item,index) of dateList" @click.stop="tabSwitch(item,index)">{{item}}</div>
                         </div>
-                    </span>
+                    </span> -->
                 </p>
+                <div class="date-wrap">
+                  日期：<div class="date" v-for="(item,index) of dateList" :class="tabIndex == index ? 'active' : ''" @click.stop="tabSwitch(item,index)">{{item}}</div>
+                </div>
             </div>
              <div class="btn-wrap">
                 <button class="order-btn" @click="selectYes">
@@ -306,7 +312,7 @@ export default {
   position: fixed;
   width: 1080px;
   height: 100%;
-  padding: 40px;
+  padding: 30px 40px;
   box-sizing: border-box;
 
   .g-mark {
@@ -325,6 +331,24 @@ export default {
     .room-info {
       width: 100%;
       box-sizing: border-box;
+
+      .date-wrap {
+        margin-top: 6px;
+        display: flex;
+        line-height: 40px;
+
+        .date {
+          margin-right: 16px;
+          border: 1px solid #ccc;
+          padding: 2px 10px;
+          border-radius: 8px;
+
+          &.active {
+            background: #0081dc;
+            color: #fff;
+          }
+        }
+      }
 
       .room-num, .title {
         line-height: 40px;
@@ -404,7 +428,7 @@ export default {
 
   .time-wrap {
     flex: 1;
-    margin-top: 20px;
+    margin-top: 65px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

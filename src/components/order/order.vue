@@ -326,7 +326,8 @@ export default {
 
   .g-hd {
     display: flex;
-    height: 80px;
+    height: 160px;
+    flex: none;
 
     .room-info {
       width: 100%;
@@ -427,8 +428,8 @@ export default {
   }
 
   .time-wrap {
-    flex: 1;
-    margin-top: 65px;
+    // flex: 1;
+    // margin-top: 65px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

@@ -97,6 +97,7 @@ const maxTime = 10  //n秒无操作自动退出
 
   .avatar {
     width: 300px;
+    border-radius: 50%;
     margin-top: 80px;
   }
 

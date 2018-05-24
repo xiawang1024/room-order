@@ -4,9 +4,9 @@
     <img src="http://www.hndt.com/podcast/1056/1119/res/bVBMEmSd.jpg?1510886166998" alt="" class="avatar">
     <p class="name">姓名：<span class="text">{{username || '***'}}</span></p>
     <p class="code">编号：<span class="text">{{usercode || '***'}}</span></p>
-    <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登陆）</p>
-    <button v-show="!isLogin" class="submit" @click="login">登陆</button>
-    <p v-show="isLogin" class="loginTips">登陆成功，请点击左侧的房间进行预约！</p>
+    <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>
+    <button v-show="!isLogin" class="submit" @click="login">登录</button>
+    <p v-show="isLogin" class="loginTips">登录成功，请点击左侧的房间进行预约！</p>
 	</div>
 </template>
 
@@ -36,7 +36,7 @@ const maxTime = 10  //n秒无操作自动退出
           this.isLogin = true
           this.username = 'wx'
           this.usercode = '020978'
-          this.$toasted.show('登陆成功！',{type:'success'})
+          this.$toasted.show('登录成功！',{type:'success'})
         },1000)
 
       }else {
@@ -56,11 +56,15 @@ const maxTime = 10  //n秒无操作自动退出
     _saveLogin() {
       window.localStorage.isLogin = 1
     },
-    _timeAgo() {  //无操作自动退出  从登陆开始执行
+    _timeAgo() {  //无操作自动退出  从登录开始执行
       let time = maxTime
-      document.body.addEventListener('click',() => {
+      document.body.addEventListener('touchstart',() => {
         time = maxTime
         console.log('touch')
+      },false)
+      document.body.addEventListener('click',() => {
+        time = maxTime
+        console.log('click')
       },false)
       let intervalId = setInterval(() => {
         time--;

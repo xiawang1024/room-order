@@ -26,9 +26,9 @@ export default {
       console.log(window.localStorage.isLogin)
       if(this._isLogin()) {
         eventBus.$emit('order',n)
-        this.$router.push({path:'/order'})
+        this.$router.push({path:'/order',query:{roomId:n}})
       }else {
-        this.$toasted.show('请先进行刷卡登陆，谢谢！',{type:'error'})
+        this.$toasted.show('请先进行刷卡登录，谢谢！',{type:'error'})
         this.$router.push({path:'/login'})
       }
     },

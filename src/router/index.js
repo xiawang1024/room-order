@@ -3,11 +3,16 @@ import Router from 'vue-router';
 import Room from '@/components/room/room';
 import Order from '@/components/order/order';
 import Login from '@/components/login/login';
+import MyOrder from '@/components/myOrder/myOrder';
 
 Vue.use(Router);
 
 export default new Router({
 	routes: [
+		{
+			path: '/',
+			redirect: '/login'
+		},
 		{
 			path: '/room',
 			name: 'room',
@@ -22,6 +27,11 @@ export default new Router({
 			path: '/login',
 			name: 'login',
 			component: Login
+		},
+		{
+			path: '/myOrder',
+			name: 'myOrder',
+			component: MyOrder
 		}
 	]
 });

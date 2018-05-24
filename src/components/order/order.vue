@@ -21,13 +21,16 @@
                   日期：<div class="date" v-for="(item,index) of dateList" :class="tabIndex == index ? 'active' : ''" @click.stop="tabSwitch(item,index)">{{item}}</div>
                 </div>
             </div>
-             <div class="btn-wrap">
-                <button class="order-btn" @click="selectYes">
-                    预约
-                </button>
-                <button class="clear-btn" @click="selectNo">
-                    重新选择
-                </button>
+            <div class="btn-wrap">
+              <button class="order-btn" @click="selectYes">
+                  预约
+              </button>
+              <button class="primary-btn" @click="myOrder">
+                  我的预约
+              </button>
+              <button class="clear-btn" @click="selectNo">
+                  重新选择
+              </button>
             </div>
         </div>
         <div class="time-wrap" >
@@ -68,6 +71,7 @@ export default {
           console.log(msg)
           this.roomId = msg
         })
+        this.roomId = this.$route.query.roomId
         this._initTimeArr()
         this._initDateArr()
     },
@@ -210,6 +214,10 @@ export default {
         selectNo () {
             this._clearSelect()
         },
+        myOrder() {
+
+          this.$router.push({path:'/myOrder',query:{roomId:this.roomId}})
+        },
         //异步提交数据
         _postTimeRange() {
             console.log(this.timeRange)
@@ -326,22 +334,27 @@ export default {
 
   .g-hd {
     display: flex;
-    height: 160px;
+    height: 165px;
     flex: none;
 
     .room-info {
       width: 100%;
       box-sizing: border-box;
 
+      .title {
+        margin-top: 10px;
+      }
+
       .date-wrap {
-        margin-top: 6px;
+        margin-top: 10px;
         display: flex;
         line-height: 40px;
+        font-size: 26px;
 
         .date {
           margin-right: 16px;
           border: 1px solid #ccc;
-          padding: 2px 10px;
+          padding: 5px 10px;
           border-radius: 8px;
 
           &.active {
@@ -353,6 +366,7 @@ export default {
 
       .room-num, .title {
         line-height: 40px;
+        font-size: 26px;
 
         .time-range {
           position: relative;
@@ -400,10 +414,10 @@ export default {
       align-items: center;
       justify-content: space-around;
 
-      .order-btn, .clear-btn {
+      .order-btn, .clear-btn, .primary-btn {
         background: #ffffff;
-        width: 140px;
-        height: 50px;
+        width: 120px;
+        height: 52px;
         cursor: pointer;
         border-radius: 6px;
         font-size: 16px;
@@ -417,6 +431,12 @@ export default {
       .order-btn {
         border: 1px solid #4caf50;
         color: #4caf50;
+      }
+
+      .primary-btn {
+        margin-left: 10px;
+        border: 1px solid #0081dc;
+        color: #0081dc;
       }
 
       .clear-btn {

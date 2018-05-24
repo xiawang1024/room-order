@@ -320,7 +320,7 @@ export default {
   position: fixed;
   width: 1080px;
   height: 100%;
-  padding: 30px 40px;
+  padding: 30px 40px 30px 40px;
   box-sizing: border-box;
 
   .g-mark {

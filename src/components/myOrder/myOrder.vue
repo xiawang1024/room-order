@@ -59,7 +59,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 1080px;
-  padding: 20px 40px;
+  padding: 20px 40px 20px 40px;
   box-sizing: border-box;
   font-size: 27px;
 

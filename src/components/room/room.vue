@@ -1,6 +1,6 @@
 <template>
     <div class="room-wrap">
-      <h2 class="title">河南广播电视台直播间预约系统</h2>
+      <h2 class="title">河南广播录制间预约系统</h2>
       <div class="room">
           <div class="item" v-for="n of 26" @click="goToOrder(n)">
               <p class="num">房间号：{{n}}</p>
@@ -67,7 +67,7 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   width: 1080px;
-  padding: 0 40px;
+  padding: 0 40px 0 40px;
   box-sizing: border-box;
   overflow: auto;
   -webkit-overflow-scrolling: touch;

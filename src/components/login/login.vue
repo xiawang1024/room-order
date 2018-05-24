@@ -1,7 +1,7 @@
 <template>
 	<div class="login">
 		<h1 class="title">登录</h1>
-    <img src="http://www.hndt.com/podcast/1056/1119/res/bVBMEmSd.jpg?1510886166998" alt="" class="avatar">
+    <img src="http://www.hndt.com/podcast/1111/res/xtmZ0Bee.png?1508751589195" alt="" class="avatar">
     <p class="name">姓名：<span class="text">{{username || '***'}}</span></p>
     <p class="code">编号：<span class="text">{{usercode || '***'}}</span></p>
     <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>

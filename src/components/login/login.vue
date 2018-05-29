@@ -7,41 +7,84 @@
     <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>
     <button v-show="!isLogin" class="submit" @click="login">登录</button>
     <p v-show="isLogin" class="loginTips">登录成功，请点击左侧的房间进行预约！</p>
+    <p><input type="text" id="cardId" v-model="cardId" style="ime-mode:disabled"  @blur="iptFocus"></p>
 	</div>
 </template>
 
 <script>
-const maxTime = 10  //n秒无操作自动退出
+const maxTime = 15  //n秒无操作自动退出
  export default {
 	data () {
 		return {
       isLogin:false,
       username:'',
-      usercode:''
+      usercode:'',
+      cardId:'',
+      isNewGetCard:true
 		}
   },
   mounted() {
-    this._loginOut()
+    document.getElementById('cardId').focus()
   },
-	components: {
+	computed: {
+    // usercode:function() {
+    //   let len = this.cardId.length
+    //   let newCode = ''
+    //   if(len<=8){
+    //     newCode = this.cardId
+    //   }else {
+    //     newCode = this.cardId.substring(len-8)
+    //   }
+    //   this.cardId = newCode
+    //   return newCode
+    // },
+    userCodeId:function() {
+      let len = this.cardId.length
+      let newCode = ''
+      if(len<=8){
+        newCode = this.cardId
+      }else {
+        newCode = this.cardId.substring(len-8)
+      }
+      this.cardId = newCode
+      return newCode
+    }
+  },
+  watch:{
+    userCodeId:function(newCode,oldCode) {
+      if(newCode !== oldCode) {
+        // alert('new')
+        this.isNewGetCard = true
+        //TODO:新刷卡用户...
+        this._loginOut() //先退出旧用户
+        this.getUserInfo()
+      }
 
+    }
   },
   methods:{
+    getUserInfo() {
+      setTimeout(() => {
+        this.username = 'wx'
+        this.usercode = '020978'
+      }, 500);
+    },
     login() {
-      let isGetCard = true //TODO:是否刷卡  this._getCard()获取
+      let isGetCard = this._getCard() //TODO:是否刷卡  this._getCard()获取
       if(isGetCard) {
-        this._saveLogin()
         setTimeout(() => {
           this._timeAgo()
           this.isLogin = true
-          this.username = 'wx'
-          this.usercode = '020978'
+          this._saveLogin()
           this.$toasted.show('登录成功！',{type:'success'})
         },1000)
 
       }else {
          this.$toasted.show('请先刷卡获取您的信息，谢谢！',{type:'error'})
       }
+    },
+    _getCard() {
+      return !!(this.username && this.usercode)
     },
     _loginOut() {
       this.username = ''
@@ -50,9 +93,6 @@ const maxTime = 10  //n秒无操作自动退出
       this._clearLogin()
       this.$router.push({path:'/login'})
     },
-    _getCard() {
-      // TODO:刷卡
-    },
     _saveLogin() {
       window.localStorage.isLogin = 1
     },
@@ -60,15 +100,17 @@ const maxTime = 10  //n秒无操作自动退出
       let time = maxTime
       document.body.addEventListener('touchstart',() => {
         time = maxTime
-        console.log('touch')
+
       },false)
       document.body.addEventListener('click',() => {
         time = maxTime
-        console.log('click')
+
       },false)
       let intervalId = setInterval(() => {
         time--;
         if(time<=0) {
+          this.$toasted.show('超过15秒未操作，已自动退出！',{type:'info'})
+          this.cardId = ''
           this._loginOut()
           clearInterval(intervalId)
         }
@@ -76,6 +118,10 @@ const maxTime = 10  //n秒无操作自动退出
     },
     _clearLogin() {
       window.localStorage.isLogin = 0
+    },
+    iptFocus() {
+
+      document.getElementById('cardId').focus()
     }
 
   }
@@ -85,10 +131,25 @@ const maxTime = 10  //n秒无操作自动退出
 <style lang="stylus" scoped>
 @import '~common/stylus/mixin.styl';
 
+#cardId {
+  position: absolute;
+  top: -10px;
+  // right: -100px;
+  z-index: -100;
+  width: 1px;
+  height: 1px;
+  border: none;
+  background: none;
+  // font-size: 10px;
+  // border: 1px solid #ccc;
+}
+
 .login {
+  position: relative;
   width: 1080px;
   text-align: center;
   font-size: 36px;
+  background: #fff;
 
   .title {
     font-size: 60px;

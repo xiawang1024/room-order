@@ -25,6 +25,11 @@ const maxTime = 15  //n秒无操作自动退出
   },
   mounted() {
     document.getElementById('cardId').focus()
+    eventBus.$on('loginOut',() => {
+      console.log('loginOut')
+      this.cardId = ''
+      this._loginOut()
+    })
   },
 	computed: {
     // usercode:function() {
@@ -100,11 +105,9 @@ const maxTime = 15  //n秒无操作自动退出
       let time = maxTime
       document.body.addEventListener('touchstart',() => {
         time = maxTime
-
       },false)
       document.body.addEventListener('click',() => {
         time = maxTime
-
       },false)
       let intervalId = setInterval(() => {
         time--;
@@ -120,10 +123,8 @@ const maxTime = 15  //n秒无操作自动退出
       window.localStorage.isLogin = 0
     },
     iptFocus() {
-
       document.getElementById('cardId').focus()
     }
-
   }
  }
 </script>

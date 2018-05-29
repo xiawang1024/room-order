@@ -21,7 +21,9 @@
                   日期：<div class="date" v-for="(item,index) of dateList" :class="tabIndex == index ? 'active' : ''" @click.stop="tabSwitch(item,index)">{{item}}</div>
                 </div>
             </div>
+
             <div class="btn-wrap">
+              <button class="clear-btn login-out" @click="loginOut">注销</button>
               <button class="order-btn" @click="selectYes">
                   预约
               </button>
@@ -75,7 +77,6 @@ export default {
         this._initTimeArr()
         this._initDateArr()
     },
-
     computed :{
         timeRange() {
             let time = ''
@@ -217,6 +218,9 @@ export default {
         myOrder() {
 
           this.$router.push({path:'/myOrder',query:{roomId:this.roomId}})
+        },
+        loginOut(){
+          eventBus.$emit('loginOut')
         },
         //异步提交数据
         _postTimeRange() {
@@ -413,6 +417,12 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-around;
+
+      .login-out {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+      }
 
       .order-btn, .clear-btn, .primary-btn {
         background: #ffffff;

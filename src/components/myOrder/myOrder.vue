@@ -3,6 +3,7 @@
       <div class="g-hd">
         <span class="icon-back" @click="backOrder"></span>
         我的预约信息
+        <button class="login-out" @click="loginOut">注销</button>
       </div>
       <div class="m-type">
           <span class="name">预约人</span>
@@ -45,7 +46,10 @@ export default {
   methods:{
     backOrder() {
       this.$router.push({path:'/order',query:{roomId:this.roomId}})
-    }
+    },
+    loginOut(){
+      eventBus.$emit('loginOut')
+    },
   }
 }
 </script>
@@ -71,6 +75,25 @@ export default {
     text-align: center;
     font-size: 34px;
     border-bottom: 1px solid #666;
+
+    .login-out {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      background: #ffffff;
+      width: 120px;
+      height: 52px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 16px;
+      outline: none;
+      border: 1px solid #f44336;
+      color: #f44336;
+
+      &:active {
+        background: rgba(0, 0, 0, 0.2);
+      }
+    }
 
     .icon-back {
       position: absolute;

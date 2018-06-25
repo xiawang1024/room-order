@@ -7,7 +7,7 @@
     <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>
     <button v-show="!isLogin" class="submit" @click="login">登录</button>
     <p v-show="isLogin" class="loginTips">登录成功，请点击左侧的房间进行预约！</p>
-    <p><input type="text" id="cardId" v-model="cardId" style="ime-mode:disabled"  @blur="iptFocus"></p>
+    <p><input type="text" id="cardId"></p>
 	</div>
 </template>
 
@@ -24,6 +24,9 @@ const maxTime = 15  //n秒无操作自动退出
 		}
   },
   mounted() {
+    $("#cardId").on("input propertychange", () => {
+     this.cardId = $("#cardId").val()
+    });
     document.getElementById('cardId').focus()
     eventBus.$on('loginOut',() => {
       console.log('loginOut')

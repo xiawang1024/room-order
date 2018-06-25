@@ -5,11 +5,24 @@
   <meta charset="utf-8">
   <meta name="full-screen" content="yes">
   <title>room</title>
+
 </head>
 
 <body>
   <div id="app"></div>
   <!-- built files will be auto injected -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    function getCode(code) {
+      console.log(code)
+      $("#cardId").val(code)
+      $("#cardId").trigger("input");
+    }
+    // setInterval(function() {
+    //   getCode(Date.parse(new Date()).toString().substr(5,8))
+    // },2000)
+
+  </script>
 </body>
 
 </html>

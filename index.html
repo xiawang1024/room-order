@@ -18,9 +18,9 @@
       $("#cardId").val(code)
       $("#cardId").trigger("input");
     }
-    // setInterval(function() {
-    //   getCode(Date.parse(new Date()).toString().substr(5,8))
-    // },2000)
+    setTimeout(function () {
+      getCode(Date.parse(new Date()).toString().substr(5, 8))
+    }, 2000)
 
   </script>
 </body>

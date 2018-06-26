@@ -7,15 +7,17 @@
     <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>
     <button v-show="!isLogin" class="submit" @click="login">登录</button>
     <p v-show="isLogin" class="loginTips">登录成功，请点击左侧的房间进行预约！</p>
+    <p>cardId：{{cardId}}{{time}}</p>
     <p><input type="text" id="cardId"></p>
 	</div>
 </template>
 
 <script>
-const maxTime = 15  //n秒无操作自动退出
+const MAX_TIME = 15  //n秒无操作自动退出
  export default {
 	data () {
 		return {
+      time:0,
       isLogin:false,
       username:'',
       usercode:'',
@@ -26,6 +28,7 @@ const maxTime = 15  //n秒无操作自动退出
   mounted() {
     $("#cardId").on("input propertychange", () => {
      this.cardId = $("#cardId").val()
+     this.getUserInfo()
     });
     document.getElementById('cardId').focus()
     eventBus.$on('loginOut',() => {
@@ -105,20 +108,21 @@ const maxTime = 15  //n秒无操作自动退出
       window.localStorage.isLogin = 1
     },
     _timeAgo() {  //无操作自动退出  从登录开始执行
-      let time = maxTime
+      this.time = MAX_TIME;
       document.body.addEventListener('touchstart',() => {
-        time = maxTime
+        this.time = MAX_TIME;
       },false)
       document.body.addEventListener('click',() => {
-        time = maxTime
+        this.time = MAX_TIME;
       },false)
-      let intervalId = setInterval(() => {
-        time--;
-        if(time<=0) {
+      this.intervalId = setInterval(() => {
+        console.log(this.time)
+        this.time--;
+        if(this.time<=0) {
+          clearInterval(this.intervalId)
           this.$toasted.show('超过15秒未操作，已自动退出！',{type:'info'})
           this.cardId = ''
           this._loginOut()
-          clearInterval(intervalId)
         }
       },1000)
     },

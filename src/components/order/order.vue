@@ -53,6 +53,8 @@ const LIST = [
             [{star:'08:00',end:'11:00'},{star:'19:15',end:'19:30'}],
             [{star:'03:15',end:'03:30'},{star:'20:45',end:'21:00'},{star:'20:00',end:'20:15'}]
         ]
+import { getUserOrderInfo } from '@/api'
+
 export default {
     name:'order',
     data (){
@@ -65,7 +67,8 @@ export default {
             timeList:[],
             selectNum:0,
             selectStartIndex:1000,
-            selectEndIndex:-1
+            selectEndIndex:-1,
+            userTimeList:[]
         }
     },
     created() {
@@ -76,6 +79,7 @@ export default {
         this.roomId = this.$route.query.roomId
         this._initTimeArr()
         this._initDateArr()
+        this._getUserOrderInfo('1906')
     },
     computed :{
         timeRange() {
@@ -97,6 +101,20 @@ export default {
         }
     },
     methods:{
+        _getUserOrderInfo(roomId) {
+          let userInfo = JSON.parse(localStorage.userInfo)
+          let userId = userInfo.userId
+          getUserOrderInfo(userId,roomId).then(res => {
+            let data = res.data
+            console.log(data.seldate)
+            console.log(typeof data.seldate)
+            // let list = JSON.parse(data.seldate)
+            // if(list.length) {
+            //   this.userTimeList = list
+            // }
+
+          })
+        },
         tabSwitch(item,index) {
             this.tabIndex = index
             this._clearSelect()
@@ -168,7 +186,10 @@ export default {
             if(index == 0) {
                 arr = arr.slice(len*4)
             }
-            this._disableArr(LIST[index],arr)
+            if(this.userTimeList.length > 0) {
+              this._disableArr(this.userTimeList[index],arr)
+
+            }
             this.timeList = arr
         },
         _disableArr (arrList,arr) {

@@ -1,7 +1,9 @@
 <template>
 	<div class="login">
 		<h1 class="title">登录</h1>
-    <img src="http://www.hndt.com/podcast/1111/res/xtmZ0Bee.png?1508751589195" alt="" class="avatar">
+    <div class="avatar-wrap">
+      <img :src="userIcon || 'http://www.hndt.com/podcast/1111/res/xtmZ0Bee.png?1508751589195'" alt="" class="avatar">
+    </div>
     <p class="name">姓名：<span class="text">{{username || '***'}}</span></p>
     <p class="code">编号：<span class="text">{{usercode || '***'}}</span></p>
     <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>
@@ -13,12 +15,14 @@
 </template>
 
 <script>
-const MAX_TIME = 15  //n秒无操作自动退出
+import { getUserInfo, login } from '@/api'
+const MAX_TIME = 30  //n秒无操作自动退出
  export default {
 	data () {
 		return {
       time:0,
       isLogin:false,
+      userIcon:'',
       username:'',
       usercode:'',
       cardId:'',
@@ -28,7 +32,7 @@ const MAX_TIME = 15  //n秒无操作自动退出
   mounted() {
     $("#cardId").on("input propertychange", () => {
      this.cardId = $("#cardId").val()
-     this.getUserInfo()
+     this.getUserInfo(this.cardId)
     });
     document.getElementById('cardId').focus()
     eventBus.$on('loginOut',() => {
@@ -74,21 +78,30 @@ const MAX_TIME = 15  //n秒无操作自动退出
     }
   },
   methods:{
-    getUserInfo() {
-      setTimeout(() => {
-        this.username = 'wx'
-        this.usercode = '020978'
-      }, 500);
+    getUserInfo(cardId) {
+      getUserInfo(cardId).then((res) => {
+        this._timeAgo()
+        let data = res.data
+        let userInfo = JSON.parse(data.s)
+        this.username = userInfo.fConsumername
+        this.usercode = userInfo.fConsumerno
+        this.userIcon = userInfo.fPhotoaddr
+      })
+
     },
     login() {
       let isGetCard = this._getCard() //TODO:是否刷卡  this._getCard()获取
       if(isGetCard) {
-        setTimeout(() => {
-          this._timeAgo()
-          this.isLogin = true
-          this._saveLogin()
-          this.$toasted.show('登录成功！',{type:'success'})
-        },1000)
+        login(this.usercode).then(res => {
+          let data = res.data
+          if(data.b){
+            this.isLogin = true
+            this._saveLogin(data.user)
+            this.$toasted.show('登录成功！',{type:'success'})
+          }else {
+            this.$toasted.show('登录失败，请重新刷卡登录！',{type:'success'})
+          }
+        })
 
       }else {
          this.$toasted.show('请先刷卡获取您的信息，谢谢！',{type:'error'})
@@ -98,14 +111,16 @@ const MAX_TIME = 15  //n秒无操作自动退出
       return !!(this.username && this.usercode)
     },
     _loginOut() {
+      this.userIcon = ''
       this.username = ''
       this.usercode = ''
       this.isLogin = false
       this._clearLogin()
       this.$router.push({path:'/login'})
     },
-    _saveLogin() {
+    _saveLogin(info) {
       window.localStorage.isLogin = 1
+      window.localStorage.userInfo = JSON.stringify(info)
     },
     _timeAgo() {  //无操作自动退出  从登录开始执行
       this.time = MAX_TIME;
@@ -130,7 +145,7 @@ const MAX_TIME = 15  //n秒无操作自动退出
     interval(){
       this.time--;
       if(this.time === 0){
-        this.$toasted.show('超过15秒未操作，已自动退出！',{type:'info'})
+        this.$toasted.show(`超过${MAX_TIME}秒未操作，已自动退出！`,{type:'info'})
         this.cardId = ''
         this._loginOut()
       }else {
@@ -139,6 +154,7 @@ const MAX_TIME = 15  //n秒无操作自动退出
     },
     _clearLogin() {
       window.localStorage.isLogin = 0
+      window.localStorage.userInfo = ''
     },
     iptFocus() {
       document.getElementById('cardId').focus()
@@ -175,10 +191,18 @@ const MAX_TIME = 15  //n秒无操作自动退出
     padding-top: 100px;
   }
 
+  .avatar-wrap {
+    margin-top: 80px;
+    display: inline-block;
+    width: 300px;
+    height: 420px;
+    // border-radius: 50%;
+    overflow: hidden;
+  }
+
   .avatar {
     width: 300px;
-    border-radius: 50%;
-    margin-top: 80px;
+    height: 420px;
   }
 
   .name, .code {

@@ -68,7 +68,7 @@ const MAX_TIME = 15  //n秒无操作自动退出
         this.isNewGetCard = true
         //TODO:新刷卡用户...
         this._loginOut() //先退出旧用户
-        this.getUserInfo()
+        // this.getUserInfo()
       }
 
     }
@@ -115,16 +115,27 @@ const MAX_TIME = 15  //n秒无操作自动退出
       document.body.addEventListener('click',() => {
         this.time = MAX_TIME;
       },false)
-      this.intervalId = setInterval(() => {
-        console.log(this.time)
-        this.time--;
-        if(this.time<=0) {
-          clearInterval(this.intervalId)
-          this.$toasted.show('超过15秒未操作，已自动退出！',{type:'info'})
-          this.cardId = ''
-          this._loginOut()
-        }
-      },1000)
+      // this.intervalId = setInterval(() => {
+      //   console.log(this.time)
+      //   this.time--;
+      //   if(this.time<=0) {
+      //     clearInterval(this.intervalId)
+      //     this.$toasted.show('超过15秒未操作，已自动退出！',{type:'info'})
+      //     this.cardId = ''
+      //     this._loginOut()
+      //   }
+      // },1000)
+      this.interval()
+    },
+    interval(){
+      this.time--;
+      if(this.time === 0){
+        this.$toasted.show('超过15秒未操作，已自动退出！',{type:'info'})
+        this.cardId = ''
+        this._loginOut()
+      }else {
+        setTimeout(this.interval,1000)
+      }
     },
     _clearLogin() {
       window.localStorage.isLogin = 0

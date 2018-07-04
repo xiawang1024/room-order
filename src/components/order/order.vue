@@ -53,7 +53,7 @@ const LIST = [
             [{star:'08:00',end:'11:00'},{star:'19:15',end:'19:30'}],
             [{star:'03:15',end:'03:30'},{star:'20:45',end:'21:00'},{star:'20:00',end:'20:15'}]
         ]
-import { getUserOrderInfo } from '@/api'
+import { getUserOrderInfo, postOrderInfo } from '@/api'
 
 export default {
     name:'order',
@@ -113,6 +113,9 @@ export default {
     methods:{
         //异步提交数据
         _postTimeRange() {
+          let userInfo = JSON.parse(localStorage.userInfo)
+          let userId = userInfo.userId
+          postOrderInfo(userId,this.roomId,'2018-11-1 18:00-18:15')
             console.log(this.timeRange)
         },
         _getUserOrderInfo(roomId) {

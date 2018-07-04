@@ -16,7 +16,7 @@
 
 <script>
 import { getUserInfo, login } from '@/api'
-const MAX_TIME = 30  //n秒无操作自动退出
+const MAX_TIME = 30000  //n秒无操作自动退出
  export default {
 	data () {
 		return {

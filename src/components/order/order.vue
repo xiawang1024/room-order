@@ -111,6 +111,10 @@ export default {
         },
     },
     methods:{
+        //异步提交数据
+        _postTimeRange() {
+            console.log(this.timeRange)
+        },
         _getUserOrderInfo(roomId) {
 
           let userInfo = JSON.parse(localStorage.userInfo)
@@ -259,10 +263,7 @@ export default {
         loginOut(){
           eventBus.$emit('loginOut')
         },
-        //异步提交数据
-        _postTimeRange() {
-            console.log(this.timeRange)
-        },
+
         selectTime(item,index) {
             if(item.disable) {
                 this.$toasted.show('此时间段不可预约！',{type:'error'})

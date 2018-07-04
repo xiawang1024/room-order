@@ -51,4 +51,10 @@ const getRoomList = (username = 'C0003') =>
 		method: 'get',
 		url: `/roomapi/queryroomApi.do?username=${username}`
 	});
-export { getUserInfo, login, getUserOrderInfo, getRoomOrderInfo, getRoomList };
+const postOrderInfo = (userId, roomId, startendtime) =>
+	http({
+		method: 'get',
+		url: `/orderapi/addOrderApi.do?userId=${userId}&roomId=${roomId}&startendtime=${startendtime}`
+	});
+
+export { getUserInfo, login, getUserOrderInfo, getRoomOrderInfo, getRoomList, postOrderInfo };

@@ -51,6 +51,12 @@ const getRoomList = (username = 'C0003') =>
 		method: 'get',
 		url: `/roomapi/queryroomApi.do?username=${username}`
 	});
+/**
+ * 提交预约信息
+ * @param {*} userId
+ * @param {*} roomId
+ * @param {*} startendtime
+ */
 const postOrderInfo = (userId, roomId, startendtime) =>
 	http({
 		method: 'get',

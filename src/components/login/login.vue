@@ -16,7 +16,7 @@
 
 <script>
 import { getUserInfo, login } from '@/api'
-const MAX_TIME = 30000  //n秒无操作自动退出
+const MAX_TIME = 30  //n秒无操作自动退出
  export default {
 	data () {
 		return {
@@ -32,7 +32,8 @@ const MAX_TIME = 30000  //n秒无操作自动退出
   mounted() {
     $("#cardId").on("input propertychange", () => {
      this.cardId = $("#cardId").val()
-     this.getUserInfo(this.cardId)
+
+     this._getUserInfo(this.cardId)
     });
     document.getElementById('cardId').focus()
     eventBus.$on('loginOut',() => {
@@ -78,9 +79,12 @@ const MAX_TIME = 30000  //n秒无操作自动退出
     }
   },
   methods:{
-    getUserInfo(cardId) {
+    _getUserInfo(cardId) {
+
       getUserInfo(cardId).then((res) => {
+
         this._timeAgo()
+
         let data = res.data
         let userInfo = JSON.parse(data.s)
         this.username = userInfo.fConsumername
@@ -92,6 +96,7 @@ const MAX_TIME = 30000  //n秒无操作自动退出
     login() {
       let isGetCard = this._getCard() //TODO:是否刷卡  this._getCard()获取
       if(isGetCard) {
+        eventBus.$emit('login',this.usercode)
         login(this.usercode).then(res => {
           let data = res.data
           if(data.b){

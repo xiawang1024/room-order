@@ -21,7 +21,15 @@ export default {
       }
   },
   created() {
-    this._getRoomList('020978')
+    this._getRoomList('C0003')
+  },
+  mounted() {
+    eventBus.$on('loginOut',() => {
+      this._getRoomList('C0003')
+    })
+    eventBus.$on('login',(username) => {
+      this._getRoomList(username)
+    })
   },
   methods:{
     _getRoomList(username) {

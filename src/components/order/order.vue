@@ -60,26 +60,29 @@ export default {
     data (){
         return {
           roomId:1,
-            surplusTime:240,
-            tabIndex:0,
-            isShowDate:false,
-            dateList:[],
-            timeList:[],
-            selectNum:0,
-            selectStartIndex:1000,
-            selectEndIndex:-1,
-            userTimeList:[]
+          surplusTime:240,
+          tabIndex:0,
+          isShowDate:false,
+          dateList:[],
+          timeList:[],
+          selectNum:0,
+          selectStartIndex:1000,
+          selectEndIndex:-1,
+          time1List:[],
+          time2List:[],
+          time3List:[],
+
         }
     },
     created() {
         eventBus.$on('order',(msg) => {
-          console.log(msg)
+          this._getUserOrderInfo(msg)
           this.roomId = msg
         })
         this.roomId = this.$route.query.roomId
         this._initTimeArr()
         this._initDateArr()
-        this._getUserOrderInfo('1906')
+        this._getUserOrderInfo(this.roomId)
     },
     computed :{
         timeRange() {
@@ -91,6 +94,13 @@ export default {
                 }
             }
             return this.dateList[this.tabIndex] + ' ' + time
+        },
+        userTimeList() {
+          let arr = []
+          arr.push(this.time1List)
+          arr.push(this.time2List)
+          arr.push(this.time3List)
+          return arr
         }
     },
     watch:{
@@ -98,21 +108,27 @@ export default {
             if(newVal == 2) {
                 this.selectNum = 0
             }
-        }
+        },
     },
     methods:{
         _getUserOrderInfo(roomId) {
+
           let userInfo = JSON.parse(localStorage.userInfo)
           let userId = userInfo.userId
           getUserOrderInfo(userId,roomId).then(res => {
             let data = res.data
-            console.log(data.seldate)
-            console.log(typeof data.seldate)
-            // let list = JSON.parse(data.seldate)
-            // if(list.length) {
-            //   this.userTimeList = list
-            // }
+            let { todaytime, tomtime, threetime } = data.seldate
+            let timeList = []
+            let time1 = ((todaytime || []))
+            let time2 = ((tomtime || []))
+            let time3 = ((threetime || []))
+            this.time1List = time1
+            this.time2List = time2
+            this.time3List = time3
 
+            this.$nextTick(()=>{
+              this.tabSwitch(this.dateList[0],this.tabIndex)
+            })
           })
         },
         tabSwitch(item,index) {
@@ -196,9 +212,9 @@ export default {
             let len = arrList.length;
             for(let i =0 ;i<len; i++) {
                 let item = arrList[i]
-                console.log('------------------------------------');
-                console.log(item);
-                console.log('------------------------------------');
+                // console.log('------------------------------------');
+                // console.log(item);
+                // console.log('------------------------------------');
                 arr.forEach((val,index,arr) => {
 
                     if(this._deletZero(val.time) >= this._deletZero(item.star) && this._deletZero(val.time) <= this._deletZero(item.end)){

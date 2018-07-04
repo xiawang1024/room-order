@@ -2,8 +2,9 @@
     <div class="room-wrap">
       <h2 class="title">河南广播录制间预约系统</h2>
       <div class="room">
-          <div class="item" v-for="n of 26" @click="goToOrder(n)">
-              <p class="num">房间号：{{n}}</p>
+          <div class="item" v-for="item in roomList" :key="item.roomId" @click="goToOrder(item.roomId)">
+              <p class="num">{{item.roomname}}</p>
+              <p class="address">{{item.address.slice(4)}}</p>
               <p class="state">房间状态：可预约</p>
           </div>
       </div>
@@ -11,17 +12,25 @@
 </template>
 
 <script>
+import { getRoomList } from '@/api'
 export default {
-  name:'name',
+  name:'room',
   data() {
       return {
-
+        roomList:[]
       }
   },
   created() {
-
+    this._getRoomList('020978')
   },
   methods:{
+    _getRoomList(username) {
+      getRoomList(username).then((res) => {
+        let data = res.data
+        let { roomList } = data
+        this.roomList = roomList
+      })
+    },
     goToOrder(n) {
       console.log(window.localStorage.isLogin)
       if(this._isLogin()) {
@@ -99,12 +108,12 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    background: #999999;
+    background: rgba(0, 0, 0, 0.3);
     text-align: center;
     margin: 10px;
     box-sizing: border-box;
 
-    .num, .state {
+    .num, .state, .address {
       flex: 0 0 100%;
       width: 100%;
     }

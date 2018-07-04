@@ -112,10 +112,16 @@ export default {
     },
     methods:{
         //异步提交数据
-        _postTimeRange() {
+        postTimeRange() {
           let userInfo = JSON.parse(localStorage.userInfo)
           let userId = userInfo.userId
-          postOrderInfo(userId,this.roomId,'2018-11-1 18:00-18:15')
+          postOrderInfo(userId,this.roomId,'2018-11-1 18:00-18:15').then(() => {
+
+                this._clearSelect()
+                this._initTimeArr('',this.tabIndex)
+                this.$toasted.show('预约成功！',{type:'success'})
+
+          })
             console.log(this.timeRange)
         },
         _getUserOrderInfo(roomId) {
@@ -247,13 +253,8 @@ export default {
                 return
             }
             this.$toasted.show('数据玩命提交中，请耐心等待！',{type:'info'})
-            this._postTimeRange()
-            setTimeout(() => {
-                this._clearSelect()
-                LIST[0].push({star:'12:15',end:'12:30'})
-                this._initTimeArr('',this.tabIndex)
-                this.$toasted.show('预约成功！',{type:'success'})
-            },3500)
+            this.postTimeRange()
+
 
         },
         selectNo () {

@@ -61,6 +61,7 @@ export default {
         return {
           roomId:1,
           surplusTime:240,
+          counttimeArr:[],
           tabIndex:0,
           isShowDate:false,
           dateList:[],
@@ -133,7 +134,7 @@ export default {
 
             let counttime = data.counttime
             let counttimeArr = counttime.split(',')
-            this.surplusTime = 240 - parseInt(counttimeArr[this.tabIndex])
+            this.counttimeArr = counttimeArr
             let { todaytime, tomtime, threetime } = data.seldate
             let timeList = []
             let time1 = ((todaytime || []))
@@ -149,6 +150,7 @@ export default {
           })
         },
         tabSwitch(item,index) {
+            this.surplusTime = 240 - parseInt(this.counttimeArr[index])
             this.tabIndex = index
             this._clearSelect()
             let suffix = ' 00:00'
@@ -318,7 +320,7 @@ export default {
         _rangeTimeLimit(start,end) {
           let surplusTime = this.surplusTime
           let surplusIndex = surplusTime / 15
-          if(end - start > surplusIndex) {
+          if(end - start >= surplusIndex) {
             this.$toasted.show('今日总预约时间已超过上限4个小时！请缩小时间范围再次尝试！',{type:'error'})
             this._clearSelect()
             this._removeClass(start)

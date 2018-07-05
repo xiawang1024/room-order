@@ -36,7 +36,9 @@ export default {
       getRoomList(username).then((res) => {
         let data = res.data
         let { roomList } = data
-        this.roomList = roomList
+        this.$nextTick(() => {
+          this.roomList = roomList
+        })
       })
     },
     goToOrder(n) {

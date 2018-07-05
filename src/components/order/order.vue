@@ -121,7 +121,9 @@ export default {
                 this._clearSelect()
                 this._initTimeArr('',this.tabIndex)
                 this.$toasted.show('预约成功！',{type:'success'})
-                this._getUserOrderInfo(this.roomId)
+                this.$nextTick(() => {
+                  this._getUserOrderInfo(this.roomId)
+                })
           })
             console.log(this.timeRange)
         },

@@ -2,14 +2,16 @@
 	<div class="login">
 		<h1 class="title">登录</h1>
     <div class="avatar-wrap">
-      <img :src="userIcon || 'http://www.hndt.com/podcast/1111/res/xtmZ0Bee.png?1508751589195'" alt="" class="avatar">
+      <img :src="userIcon || require('./avatar.png')" alt="" class="avatar">
     </div>
     <p class="name">姓名：<span class="text">{{username || '***'}}</span></p>
     <p class="code">编号：<span class="text">{{usercode || '***'}}</span></p>
     <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>
-    <button v-show="!isLogin" class="submit" @click="login">登录</button>
+    <!-- <touch-ripple> -->
+      <button v-show="!isLogin" class="submit" @click="login">登录</button>
+    <!-- </touch-ripple> -->
     <p v-show="isLogin" class="loginTips">登录成功，请点击左侧的房间进行预约！</p>
-    <p>cardId：{{cardId}}{{time}}</p>
+    <!-- <p>cardId：{{cardId}}{{time}}</p> -->
     <p><input type="text" id="cardId"></p>
 	</div>
 </template>
@@ -120,6 +122,7 @@ const MAX_TIME = 30 //n秒无操作自动退出
       this.username = ''
       this.usercode = ''
       this.isLogin = false
+      eventBus.$emit('autoLoginOut')
       this._clearLogin()
       this.$router.push({path:'/login'})
     },

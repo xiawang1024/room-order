@@ -3,7 +3,7 @@
       <h2 class="title">河南广播录制间预约系统</h2>
       <div class="room">
 
-          <div class="item" v-for="item in roomList" :key="item.roomId" @click="goToOrder(item.roomId)">
+          <div class="item" :class="activeIndex == index ? 'active' : ''"  v-for="(item, index) in roomList" :key="item.roomId" @click="goToOrder(item.roomId, index)">
             <!-- <touch-ripple class="item-wrap" > -->
               <p class="num">{{item.roomname}}</p>
               <p class="address">{{item.address.slice(4)}}</p>
@@ -20,6 +20,7 @@ export default {
   name:'room',
   data() {
       return {
+        activeIndex:0,
         roomList:[]
       }
   },
@@ -29,13 +30,19 @@ export default {
   mounted() {
     eventBus.$on('loginOut',() => {
       this._getRoomList('C0003')
+      this.activeIndex = 0
     })
     eventBus.$on('autoLoginOut',() => {
       this._getRoomList('C0003')
+      this.activeIndex = 0
     })
     eventBus.$on('login',(username) => {
+      this.activeIndex = 0
       this._getRoomList(username)
     })
+  },
+  updated() {
+    // this.activeIndex = 0;
   },
   methods:{
     _getRoomList(username) {
@@ -47,7 +54,9 @@ export default {
         })
       })
     },
-    goToOrder(n) {
+    goToOrder(n, index) {
+
+      this.activeIndex = index
       console.log(window.localStorage.isLogin)
       if(this._isLogin()) {
         eventBus.$emit('order',n)
@@ -132,6 +141,12 @@ export default {
     text-align: center;
     margin: 10px;
     box-sizing: border-box;
+
+    &.active {
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      // border: 4px solid #0081dc;
+    }
 
     .item-wrap {
       width: 100%;

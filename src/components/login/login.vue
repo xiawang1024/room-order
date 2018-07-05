@@ -16,7 +16,7 @@
 
 <script>
 import { getUserInfo, login } from '@/api'
-const MAX_TIME = 30  //n秒无操作自动退出
+const MAX_TIME = 30 //n秒无操作自动退出
  export default {
 	data () {
 		return {
@@ -148,13 +148,14 @@ const MAX_TIME = 30  //n秒无操作自动退出
       this.interval()
     },
     interval(){
+      clearTimeout(this.timer)
       this.time--;
       if(this.time === 0){
         this.$toasted.show(`超过${MAX_TIME}秒未操作，已自动退出！`,{type:'info'})
         this.cardId = ''
         this._loginOut()
       }else {
-        setTimeout(this.interval,1000)
+        this.timer = setTimeout(this.interval,1000)
       }
     },
     _clearLogin() {

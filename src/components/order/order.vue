@@ -115,12 +115,12 @@ export default {
         postTimeRange() {
           let userInfo = JSON.parse(localStorage.userInfo)
           let userId = userInfo.userId
-          postOrderInfo(userId,this.roomId,'2018-11-1 18:00-18:15').then(() => {
+          postOrderInfo(userId,this.roomId,this.timeRange).then(() => {
 
                 this._clearSelect()
                 this._initTimeArr('',this.tabIndex)
                 this.$toasted.show('预约成功！',{type:'success'})
-
+                this._getUserOrderInfo(this.roomId)
           })
             console.log(this.timeRange)
         },
@@ -130,6 +130,10 @@ export default {
           let userId = userInfo.userId
           getUserOrderInfo(userId,roomId).then(res => {
             let data = res.data
+
+            let counttime = data.counttime
+            let counttimeArr = counttime.split(',')
+            this.surplusTime = 240 - parseInt(counttimeArr[this.tabIndex])
             let { todaytime, tomtime, threetime } = data.seldate
             let timeList = []
             let time1 = ((todaytime || []))

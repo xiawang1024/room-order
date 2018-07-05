@@ -13,37 +13,54 @@
       </div>
       <ul class="list-wrap">
 
-        <li class="list" v-for="n of 18">
-          <span class="name">预约人人</span>
-          <span class="room-id">2007录播间</span>
+        <li class="list" v-if="orderslist" v-for="item in orderslist" :key="item.orderId">
+          <span class="name">{{item.user.username}}</span>
+          <span class="room-id">{{item.roomname}}</span>
           <div class="time-range">
             <p class="time-start">
               <span class="start"></span>
-              <span class="time">2018-05-17 17:45:00</span>
+              <span class="time">{{getLocalTime(item.starttime)}}</span>
             </p>
             <p class="time-end">
               <span class="end"></span>
-              <span class="time">2018-05-17 18:45:00</span>
+              <span class="time">{{getLocalTime(item.endtime)}}</span>
             </p>
           </div>
-          <span class="time-created">2018-05-17 17:37:00</span>
+          <span class="time-created">{{item.times}}</span>
         </li>
       </ul>
     </div>
 </template>
 
 <script>
+import { getUserOrderListInfo } from '@/api'
 export default {
   name:'my-order',
   data() {
       return {
-
+        orderslist:[]
       }
   },
   created() {
     this.roomId = this.$route.query.roomId
+    this._getUserOrderListInfo()
   },
   methods:{
+    _getUserOrderListInfo() {
+      let userInfo = JSON.parse(localStorage.userInfo)
+      let userId = userInfo.userId
+      getUserOrderListInfo(userId).then( res => {
+        let data = res.data
+        let { orderslist } = data
+        this.orderslist = orderslist
+        console.log('------------------------------------');
+        console.log(orderslist);
+        console.log('------------------------------------');
+      })
+    },
+    getLocalTime(nS) {
+      return new Date(parseInt(nS)).toLocaleString().replace(/:\d{1,2}$/,' ');
+    },
     backOrder() {
       this.$router.push({path:'/order',query:{roomId:this.roomId}})
     },

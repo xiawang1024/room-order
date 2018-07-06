@@ -122,7 +122,6 @@ const MAX_TIME = 30 //n秒无操作自动退出
       this.username = ''
       this.usercode = ''
       this.isLogin = false
-      eventBus.$emit('autoLoginOut')
       this._clearLogin()
       this.$router.push({path:'/login'})
     },
@@ -156,6 +155,7 @@ const MAX_TIME = 30 //n秒无操作自动退出
       if(this.time === 0){
         this.$toasted.show(`超过${MAX_TIME}秒未操作，已自动退出！`,{type:'info'})
         this.cardId = ''
+        eventBus.$emit('autoLoginOut')
         this._loginOut()
       }else {
         this.timer = setTimeout(this.interval,1000)

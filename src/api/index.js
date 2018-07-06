@@ -1,7 +1,7 @@
 import axios from 'axios';
 const http = axios.create({
 	baseURL: 'http://172.20.0.12:8084',
-	timeout: 2000
+	timeout: 5000
 });
 /**
  * 根据卡号获取用户基本信息

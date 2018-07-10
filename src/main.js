@@ -23,6 +23,8 @@ if (isPc() == 'phone') {
 // 	speed: 1.2,
 // 	transition: 'ease'
 // });
+import fastclick from 'fastclick';
+fastclick.attach(document.body);
 document.body.addEventListener('touchstart', function() {});
 Vue.use(Toasted, {
 	position: 'top-left',

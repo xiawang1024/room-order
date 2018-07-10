@@ -104,13 +104,15 @@ const MAX_TIME = 30 //n秒无操作自动退出
         eventBus.$emit('login',this.usercode)
         login(this.usercode).then(res => {
           let data = res.data
-          if(data.b){
+          if(data.user){
             this.isLogin = true
             this._saveLogin(data.user)
             this.$toasted.show('登录成功！',{type:'success'})
           }else {
-            this.$toasted.show('登录失败，请重新刷卡登录！',{type:'success'})
+            this.$toasted.show('您无预约权限，谢谢！',{type:'error'})
           }
+        }).catch(err => {
+          this.$toasted.show('登录失败，请重新刷卡登录！',{type:'success'})
         })
 
       }else {

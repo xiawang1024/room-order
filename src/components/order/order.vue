@@ -39,8 +39,9 @@
             <span class="time"
                 ref="time"
                 v-for="(item,index) of timeList"
-                :class="[{disable:item.disable,selected:index == selectStartIndex || index >= selectStartIndex && index <= selectEndIndex}]"
-                @click="selectTime(item,index)"
+                :class="[{disable:item.disable, selected:(index == selectStartIndex || index >= selectStartIndex && index <= selectEndIndex)}]"
+                @click.self="selectTime(item,index)"
+                :key="index"
             >{{item.time}}</span>
         </div>
     </div>
@@ -334,6 +335,7 @@ export default {
             this.$refs.time[index].classList.remove('selected')
         },
         _clearSelect() {
+            this.selectNum = 0
             this.selectStartIndex = 1000
             this.selectEndIndex = -1
         },

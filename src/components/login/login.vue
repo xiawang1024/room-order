@@ -13,6 +13,7 @@
     <p v-show="isLogin" class="loginTips">登录成功，请点击左侧的房间进行预约！</p>
     <!-- <p>cardId：{{cardId}}{{time}}</p> -->
     <p><input type="text" id="cardId"></p>
+    <button v-show="isLogin" class="clear-btn login-out" @click="loginOut">注销</button>
 	</div>
 </template>
 
@@ -28,7 +29,8 @@ const MAX_TIME = 30 //n秒无操作自动退出
       username:'',
       usercode:'',
       cardId:'',
-      isNewGetCard:true
+      isNewGetCard:true,
+      timer:null
 		}
   },
   mounted() {
@@ -40,6 +42,7 @@ const MAX_TIME = 30 //n秒无操作自动退出
     document.getElementById('cardId').focus()
     eventBus.$on('loginOut',() => {
       console.log('loginOut')
+      clearTimeout(this.timer)
       this.cardId = ''
       this._loginOut()
     })
@@ -125,6 +128,9 @@ const MAX_TIME = 30 //n秒无操作自动退出
       this._clearLogin()
       this.$router.push({path:'/login'})
     },
+    loginOut() {
+      eventBus.$emit('loginOut')
+    },
     _saveLogin(info) {
       window.localStorage.isLogin = 1
       window.localStorage.userInfo = JSON.stringify(info)
@@ -152,6 +158,7 @@ const MAX_TIME = 30 //n秒无操作自动退出
     interval(){
       clearTimeout(this.timer)
       this.time--;
+      eventBus.$emit('timeAgo',this.time)
       if(this.time === 0){
         this.$toasted.show(`超过${MAX_TIME}秒未操作，已自动退出！`,{type:'info'})
         this.cardId = ''
@@ -245,6 +252,21 @@ const MAX_TIME = 30 //n秒无操作自动退出
     margin-top: 80px;
     font-size: 42px;
     color: #4caf50;
+  }
+
+  .login-out {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    background: #ffffff;
+    width: 120px;
+    height: 52px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    border: 1px solid #f44336;
+    color: #f44336;
   }
 }
 </style>

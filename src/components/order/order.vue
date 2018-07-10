@@ -322,7 +322,7 @@ export default {
         _rangeTimeLimit(start,end) {
           let surplusTime = this.surplusTime
           let surplusIndex = surplusTime / 15
-          if(end - start >= surplusIndex) {
+          if(end - start > surplusIndex) {
             this.$toasted.show('今日总预约时间已超过上限4个小时！请缩小时间范围再次尝试！',{type:'error'})
             this._clearSelect()
             this._removeClass(start)

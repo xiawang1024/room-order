@@ -1,6 +1,7 @@
 <template>
     <div class="room-wrap">
       <h2 class="title">河南广播录制间预约系统</h2>
+      <p class="time" v-show="isShowTime">{{time}}秒后自动退出</p>
       <div class="room">
 
           <div class="item" :class="activeIndex == index ? 'active' : ''"  v-for="(item, index) in roomList" :key="item.roomId" @click="goToOrder(item.roomId, index)">
@@ -21,7 +22,9 @@ export default {
   data() {
       return {
         activeIndex:0,
-        roomList:[]
+        roomList:[],
+        time:30,
+        isShowTime:false
       }
   },
   created() {
@@ -31,14 +34,20 @@ export default {
     eventBus.$on('loginOut',() => {
       this._getRoomList('C0003')
       this.activeIndex = 0
+      this.isShowTime = false
     })
     eventBus.$on('autoLoginOut',() => {
       this._getRoomList('C0003')
       this.activeIndex = 0
+      this.isShowTime = false
     })
     eventBus.$on('login',(username) => {
       this.activeIndex = 0
       this._getRoomList(username)
+      this.isShowTime = true
+    })
+    eventBus.$on('timeAgo',(time) => {
+      this.time = time
     })
   },
   updated() {
@@ -88,6 +97,13 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+}
+
+.time {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  font-size: 30px;
 }
 
 .title {

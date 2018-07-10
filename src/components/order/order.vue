@@ -164,7 +164,7 @@ export default {
             this.isShowDate = true
         },
         _initDateArr() {
-            this.dateList = this._getDay(3)
+            this.dateList = this._getDay(2)   //三天
         },
         _initTimeArr(date = '',index = 0) {
             let nowTime = new Date()

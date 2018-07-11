@@ -12,7 +12,7 @@
           <span class="time-created">预约时间</span>
       </div>
       <ul class="list-wrap">
-
+        <p class="tips" v-if="!orderslist">暂无预约信息</p>
         <li class="list" v-if="orderslist" v-for="item in orderslist" :key="item.orderId">
           <span class="name">{{item.user.username}}</span>
           <span class="room-id">{{item.roomname}}</span>
@@ -157,6 +157,13 @@ export default {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box;
+
+    .tips {
+      text-align: center;
+      padding: 30px;
+      font-size: 32px;
+      color: #f00;
+    }
 
     .list {
       width: 1000px;

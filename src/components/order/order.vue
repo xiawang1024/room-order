@@ -132,7 +132,7 @@ export default {
             }
             this.orderInfo = {
               orderRoomName:this.roomInfo.roomname,
-              orderRoomAddress:'',
+              orderRoomAddress:this.roomInfo.address || this.roomInfo.roomname,
               orderTime:this.timeRange
             }
           this.isOff = true
@@ -145,14 +145,19 @@ export default {
         postTimeRange() {
           let userInfo = JSON.parse(localStorage.userInfo)
           let userId = userInfo.userId
-          postOrderInfo(userId,this.roomId,this.timeRange).then(() => {
-
+          postOrderInfo(userId,this.roomId,this.timeRange).then((res) => {
+              let data = res.data
+              if(data.f){
                 this._clearSelect()
                 this._initTimeArr('',this.tabIndex)
                 this.$toasted.show('预约成功！',{type:'success'})
                 this.$nextTick(() => {
                   this._getUserOrderInfo(this.roomId)
                 })
+              }else {
+                this.$toasted.show('预约失败！',{type:'error'})
+              }
+
           })
             console.log(this.timeRange)
         },
@@ -193,7 +198,7 @@ export default {
             this.isShowDate = true
         },
         _initDateArr() {
-            this.dateList = this._getDay(2)   //三天
+            this.dateList = this._getDay(3)   //三天
         },
         _initTimeArr(date = '',index = 0) {
             let nowTime = new Date()
@@ -289,6 +294,7 @@ export default {
             //     this.$toasted.show('请选择结束时间！',{type:'error'})
             //     return
             // }
+            this.isOff = false
             this.$toasted.show('数据玩命提交中，请耐心等待！',{type:'info'})
             this.postTimeRange()
 

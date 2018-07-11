@@ -14,15 +14,23 @@
     <!-- <p>cardId：{{cardId}}{{time}}</p> -->
     <p><input type="text" id="cardId"></p>
     <button v-show="isLogin" class="clear-btn login-out" @click="loginOut">注销</button>
+    <button class="helper-btn" @click="openHelper">使用说明</button>
+    <helper :isOff="isOff" @closeHelper="closeHelper"></helper>
 	</div>
 </template>
 
 <script>
 import { getUserInfo, login } from '@/api'
+import helper from '../helper/helper'
 const MAX_TIME = 30 //n秒无操作自动退出
  export default {
+   name:'login',
+   components:{
+    helper
+   },
 	data () {
 		return {
+      isOff:false,
       time:0,
       isLogin:false,
       userIcon:'',
@@ -84,6 +92,12 @@ const MAX_TIME = 30 //n秒无操作自动退出
     }
   },
   methods:{
+    openHelper() {
+      this.isOff = true
+    },
+    closeHelper() {
+      this.isOff = false
+    },
     _getUserInfo(cardId) {
 
       getUserInfo(cardId).then((res) => {
@@ -128,6 +142,7 @@ const MAX_TIME = 30 //n秒无操作自动退出
       this.usercode = ''
       this.isLogin = false
       this._clearLogin()
+      this.$toasted.show('退出登录，谢谢！',{type:'error'})
       this.$router.push({path:'/login'})
     },
     loginOut() {
@@ -200,6 +215,7 @@ const MAX_TIME = 30 //n秒无操作自动退出
 .login {
   position: relative;
   width: 1080px;
+  // height: 100vh;
   text-align: center;
   font-size: 36px;
   background: #fff;
@@ -257,6 +273,21 @@ const MAX_TIME = 30 //n秒无操作自动退出
   }
 
   .login-out {
+    position: absolute;
+    top: 200px;
+    right: 100px;
+    background: #ffffff;
+    width: 120px;
+    height: 52px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    border: 1px solid #f44336;
+    color: #f44336;
+  }
+
+  .helper-btn {
     position: absolute;
     top: 100px;
     right: 100px;

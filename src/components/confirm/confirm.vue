@@ -3,7 +3,7 @@
    <div class="mark" ></div>
    <div class="body" >
      <h3 class="title">确认您的预约信息</h3>
-     <div class="cont">
+     <div class="cont" v-if="orderInfo">
        <p class="desc">录播间名称：{{orderInfo.orderRoomName}}</p>
        <p class="desc">录播间地址：{{orderInfo.orderRoomAddress}}</p>
        <p class="desc">预约时间：{{orderInfo.orderTime}}</p>
@@ -33,9 +33,6 @@
        type:Object,
        default:() => {
          return {
-           orderRoomName:'2003录播间',
-           orderRoomAddress:'20楼2003房间',
-           orderTime:'2018-7-11 9:00-11:00'
          }
        }
      }

@@ -24,7 +24,7 @@
 
             <div class="btn-wrap">
               <button class="clear-btn login-out" @click="loginOut">注销</button>
-              <button class="order-btn" @click="selectYes">
+              <button class="order-btn" @click="openConfirm">
                   预约
               </button>
               <button class="primary-btn" @click="myOrder">
@@ -44,6 +44,7 @@
                 :key="index"
             >{{item.time}}</span>
         </div>
+        <confirm :isOff="isOff" :orderInfo="orderInfo" @cancelOrder="cancelOrder" @yesOrder="selectYes"></confirm>
     </div>
 </template>
 
@@ -56,10 +57,17 @@ const LIST = [
         ]
 import { getUserOrderInfo, postOrderInfo } from '@/api'
 
+import confirm from '../confirm/confirm'
+
 export default {
     name:'order',
+    components:{
+      confirm
+    },
     data (){
         return {
+          orderInfo:null,
+          isOff:false,
           roomId:1,
           surplusTime:240,
           counttimeArr:[],
@@ -113,6 +121,26 @@ export default {
         },
     },
     methods:{
+        openConfirm() {
+           if(this.selectStartIndex == 1000) {
+                this.$toasted.show('请选择开始时间！',{type:'error'})
+                return
+            }
+            if(this.selectEndIndex == -1) {
+                this.$toasted.show('请选择结束时间！',{type:'error'})
+                return
+            }
+            this.orderInfo = {
+              orderRoomName:this.roomInfo.roomname,
+              orderRoomAddress:'',
+              orderTime:this.timeRange
+            }
+          this.isOff = true
+        },
+        cancelOrder() {
+          this.isOff = false
+          this.selectNo()
+        },
         //异步提交数据
         postTimeRange() {
           let userInfo = JSON.parse(localStorage.userInfo)
@@ -134,7 +162,7 @@ export default {
           let userId = userInfo.userId
           getUserOrderInfo(userId,roomId).then(res => {
             let data = res.data
-
+            this.roomInfo = data
             let counttime = data.counttime
             let counttimeArr = counttime.split(',')
             this.counttimeArr = counttimeArr
@@ -253,14 +281,14 @@ export default {
             return new Date(prefix+val).getTime();
         },
         selectYes() {
-            if(this.selectStartIndex == 1000) {
-                this.$toasted.show('请选择开始时间！',{type:'error'})
-                return
-            }
-            if(this.selectEndIndex == -1) {
-                this.$toasted.show('请选择结束时间！',{type:'error'})
-                return
-            }
+            // if(this.selectStartIndex == 1000) {
+            //     this.$toasted.show('请选择开始时间！',{type:'error'})
+            //     return
+            // }
+            // if(this.selectEndIndex == -1) {
+            //     this.$toasted.show('请选择结束时间！',{type:'error'})
+            //     return
+            // }
             this.$toasted.show('数据玩命提交中，请耐心等待！',{type:'info'})
             this.postTimeRange()
 

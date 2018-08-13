@@ -1,51 +1,46 @@
 <template>
-    <div class="order">
-        <div class="g-mark" v-show="isShowDate"></div>
-        <div class="g-hd">
-            <div class="room-info">
-                <p class="room-num">房间号：{{roomId}}</p>
-                <p class="title">
-                    已选择预约时间段：
-                    <span class="time-range">
-                        {{timeRange}}
-                    </span>
-                    <!-- <span class="time-range" @click="openDate">
+  <div class="order">
+    <div class="g-mark" v-show="isShowDate"></div>
+    <div class="g-hd">
+      <div class="room-info">
+        <p class="room-num">房间号：{{roomId}}</p>
+        <p class="title">
+          已选择预约时间段：
+          <span class="time-range">
+            {{timeRange}}
+          </span>
+          <!-- <span class="time-range" @click="openDate">
                         {{timeRange}}
                         <div class="date-options" v-show="isShowDate">
                             <span class="arrow"></span>
                             <div class="date" v-for="(item,index) of dateList" @click.stop="tabSwitch(item,index)">{{item}}</div>
                         </div>
                     </span> -->
-                </p>
-                <div class="date-wrap">
-                  日期：<div class="date" v-for="(item,index) of dateList" :class="tabIndex == index ? 'active' : ''" @click.stop="tabSwitch(item,index)">{{item}}</div>
-                </div>
-            </div>
+        </p>
+        <div class="date-wrap">
+          日期：
+          <div class="date" v-for="(item,index) of dateList" :class="tabIndex == index ? 'active' : ''" @click.stop="tabSwitch(item,index)">{{item}}</div>
+        </div>
+      </div>
 
-            <div class="btn-wrap">
-              <button class="clear-btn login-out" @click="loginOut">注销</button>
-              <button class="order-btn" @click="openConfirm">
-                  预约
-              </button>
-              <button class="primary-btn" @click="myOrder">
-                  我的预约
-              </button>
-              <button class="clear-btn" @click="selectNo">
-                  重新选择
-              </button>
-            </div>
-        </div>
-        <div class="time-wrap" >
-            <span class="time"
-                ref="time"
-                v-for="(item,index) of timeList"
-                :class="[{disable:item.disable, selected:(index == selectStartIndex || index >= selectStartIndex && index <= selectEndIndex)}]"
-                @click.self="selectTime(item,index)"
-                :key="index"
-            >{{item.time}}</span>
-        </div>
-        <confirm :isOff="isOff" :orderInfo="orderInfo" @cancelOrder="cancelOrder" @yesOrder="selectYes"></confirm>
+      <div class="btn-wrap">
+        <button class="clear-btn login-out" @click="loginOut">注销</button>
+        <button class="order-btn" @click="openConfirm">
+          预约
+        </button>
+        <button class="primary-btn" @click="myOrder">
+          我的预约
+        </button>
+        <button class="clear-btn" @click="selectNo">
+          重新选择
+        </button>
+      </div>
     </div>
+    <div class="time-wrap">
+      <span class="time" ref="time" v-for="(item,index) of timeList" :class="[{disable:item.disable, selected:(index == selectStartIndex || index >= selectStartIndex && index <= selectEndIndex)}]" @click.self="selectTime(item,index)" :key="index">{{item.time}}</span>
+    </div>
+    <confirm :isOff="isOff" :orderInfo="orderInfo" @cancelOrder="cancelOrder" @yesOrder="selectYes"></confirm>
+  </div>
 </template>
 
 <script>
@@ -147,7 +142,8 @@ export default {
           let userId = userInfo.userId
           postOrderInfo(userId,this.roomId,this.timeRange).then((res) => {
               let data = res.data
-              if(data.f){
+              // console.log(data.message == "'预约成功'")
+              if(data.message == "'预约成功'"){
                 this._clearSelect()
                 this._initTimeArr('',this.tabIndex)
                 this.$toasted.show('预约成功！',{type:'success'})

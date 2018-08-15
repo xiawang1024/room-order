@@ -92,7 +92,7 @@ const MAX_TIME = 30 //n秒无操作自动退出
         // alert('new')
         this.isNewGetCard = true
         //TODO:新刷卡用户...
-        alert('log')
+        // alert('log')
         this._loginOut() //先退出旧用户
         // this.getUserInfo()
       }else {

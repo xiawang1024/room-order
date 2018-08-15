@@ -1,14 +1,18 @@
 <template>
-	<div class="login">
-		<h1 class="title">登录</h1>
+  <div class="login">
+    <h1 class="title">登录</h1>
     <div class="avatar-wrap">
       <img :src="userIcon || require('./avatar.png')" alt="" class="avatar">
     </div>
-    <p class="name">姓名：<span class="text">{{username || '***'}}</span></p>
-    <p class="code">编号：<span class="text">{{usercode || '***'}}</span></p>
+    <p class="name">姓名：
+      <span class="text">{{username || '***'}}</span>
+    </p>
+    <p class="code">编号：
+      <span class="text">{{usercode || '***'}}</span>
+    </p>
     <p v-show="!isLogin" class="tips">（请刷卡后确认您的姓名和编号无误后，点击登录）</p>
     <!-- <touch-ripple> -->
-      <button v-show="!isLogin" class="submit" @click="login">登录</button>
+    <button v-show="!isLogin" class="submit" @click="login">登录</button>
     <!-- </touch-ripple> -->
     <p v-show="isLogin" class="loginTips">登录成功，请点击左侧的房间进行预约！</p>
     <!-- <p>cardId：{{cardId}}{{time}}</p> -->
@@ -16,7 +20,7 @@
     <button v-show="isLogin" class="clear-btn login-out" @click="loginOut">注销</button>
     <button class="helper-btn" @click="openHelper">使用说明</button>
     <helper :isOff="isOff" @closeHelper="closeHelper"></helper>
-	</div>
+  </div>
 </template>
 
 <script>
@@ -81,12 +85,18 @@ const MAX_TIME = 30 //n秒无操作自动退出
   },
   watch:{
     userCodeId:function(newCode,oldCode) {
-      if(newCode !== oldCode) {
+      console.log(newCode)
+      console.log(oldCode)
+
+      if(newCode !== oldCode && oldCode != '') {
         // alert('new')
         this.isNewGetCard = true
         //TODO:新刷卡用户...
+        alert('log')
         this._loginOut() //先退出旧用户
         // this.getUserInfo()
+      }else {
+        this.$toasted.show('刷卡成功！',{type:'success'})
       }
 
     }
